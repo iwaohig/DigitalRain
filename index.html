@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Rain</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            color: #33ff33;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        .matrix {
+            font-size: 1.5em;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: matrixDrop linear infinite;
+            white-space: nowrap;
+            writing-mode: vertical-rl; /* Make the text vertical */
+            text-orientation: upright; /* Ensure characters are oriented correctly */
+        }
+
+        .matrix::after {
+            content: attr(data-tail);
+            color: white;
+            display: block;
+        }
+
+        @keyframes matrixDrop {
+            from {
+                top: -100%;
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            to {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <script>
+        // Some classical Japanese literature sentences
+        const sentences = [
+            "春はあけぼの。やうやう白くなりゆく山ぎは少し明りて紫だちたる雲の細くたなびきたる。",
+            "夏は夜。月の頃はさらなり。闇もなほ。螢の多く飛びちがひたる。",
+            "秋は夕暮れ。夕日の差して山の端いと近う見ゆる。",
+            "冬はつとめて。雪の降りたるは言ふべきにもあらず。霜のいと白きも、またさらでもいと寒き。"
+        ];
+
+        function getRandomSentence() {
+            let sentence = sentences[Math.floor(Math.random() * sentences.length)];
+            sentence = sentence.split('').reverse().join(''); // Reverse the order of the characters
+            const lastChar = sentence[sentence.length - 1];
+            return { content: sentence.slice(0, -1), tail: lastChar };
+        }
+
+        function createMatrixDrop() {
+            const { content, tail } = getRandomSentence();
+            const drop = document.createElement('div');
+            drop.className = 'matrix';
+            drop.textContent = content;
+            drop.setAttribute('data-tail', tail);
+            drop.style.left = Math.random() * window.innerWidth + 'px';
+            drop.style.animationDuration = (Math.random() * 10 + 5) + 's'; /* Longer duration for full sentences */
+            document.body.appendChild(drop);
+
+            setTimeout(() => {
+                document.body.removeChild(drop);
+            }, (Math.random() * 10000 + 5000)); /* Adjusted for longer duration */
+        }
+
+        setInterval(createMatrixDrop, 500); /* Slower interval for readability */
+    </script>
+</body>
+</html>
